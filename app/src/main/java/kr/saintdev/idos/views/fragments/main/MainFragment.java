@@ -1,5 +1,6 @@
 package kr.saintdev.idos.views.fragments.main;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -10,6 +11,7 @@ import android.widget.LinearLayout;
 
 import kr.saintdev.idos.R;
 import kr.saintdev.idos.views.activitys.MainActivity;
+import kr.saintdev.idos.views.activitys.RecordActivity;
 import kr.saintdev.idos.views.fragments.SuperFragment;
 
 public class MainFragment extends SuperFragment {
@@ -50,7 +52,26 @@ public class MainFragment extends SuperFragment {
     class OnButtonClickHandler implements View.OnClickListener {
         @Override
         public void onClick(View v) {
-
+            switch(v.getId()) {
+                case R.id.main_btnlayout_record:
+                    Intent record = new Intent(control, RecordActivity.class);
+                    record.putExtra("index", 0);
+                    startActivity(record);
+                    break;
+                case R.id.main_btnlayout_recordplay:
+                    Intent recordPlay = new Intent(control, RecordActivity.class);
+                    recordPlay.putExtra("index", 1);
+                    startActivity(recordPlay);
+                    break;
+                case R.id.main_btnlayout_stt:
+                    break;
+                case R.id.main_btnlayout_sttplay:
+                    break;
+                case R.id.main_btnlayout_translate:
+                    break;
+                case R.id.main_btnlayout_settings:
+                    break;
+            }
         }
     }
 }

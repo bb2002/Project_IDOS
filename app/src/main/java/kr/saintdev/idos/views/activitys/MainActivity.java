@@ -11,6 +11,7 @@ import kr.saintdev.idos.R;
 import kr.saintdev.idos.views.fragments.SuperFragment;
 
 public class MainActivity extends AppCompatActivity {
+    SuperFragment nowView = null;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,6 +24,8 @@ public class MainActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.main_container, view);
         ft.commit();
+
+        this.nowView = view;
     }
 
     public void setActionBarTitle(@Nullable  String title) {
