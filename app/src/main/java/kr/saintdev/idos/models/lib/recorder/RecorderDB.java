@@ -1,4 +1,10 @@
-package kr.saintdev.idos.models.components.recorder;
+package kr.saintdev.idos.models.lib.recorder;
+
+/**
+ * Copyright (c) 2015-2018 Saint software All rights reserved.
+ *
+ * @date 2018-05-11
+ */
 
 import android.content.Context;
 import android.database.Cursor;
@@ -7,7 +13,8 @@ import android.database.sqlite.SQLiteStatement;
 import java.io.File;
 import java.util.ArrayList;
 
-import kr.saintdev.idos.models.datas.DBHelper;
+import kr.saintdev.idos.models.database.DBHelper;
+
 
 /**
  * Copyright (c) 2015-2018 Saint software All rights reserved.
@@ -22,6 +29,7 @@ public class RecorderDB {
     public RecorderDB(Context context) {
         this.context = context;
         this.dbHelper = new DBHelper(context);
+        this.dbHelper.open();
     }
 
     public void addRecordObject(RecordObject recObj) {

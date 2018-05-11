@@ -1,4 +1,4 @@
-package kr.saintdev.idos.models.components.recorder;
+package kr.saintdev.idos.models.lib.recorder;
 
 import java.io.File;
 

@@ -4,23 +4,34 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 
 import kr.saintdev.idos.R;
 import kr.saintdev.idos.views.fragments.SuperFragment;
-import kr.saintdev.idos.views.fragments.record.RecordPlayFragment;
-import kr.saintdev.idos.views.fragments.record.RecordVoiceFragment;
+import kr.saintdev.idos.views.fragments.recorder.AudioRecordPlayFragment;
+import kr.saintdev.idos.views.fragments.recorder.AudioRecordRecFragment;
 
-public class RecordActivity extends AppCompatActivity {
+/**
+ * Copyright (c) 2015-2018 Saint software All rights reserved.
+ *
+ * @date 2018-05-11
+ */
+
+public class AudioRecordActivity extends AppCompatActivity {
     SuperFragment nowView = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_record);
+        setContentView(R.layout.activity_recorder);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
 
         Intent intent = getIntent();
         int idx = intent.getIntExtra("index", 0);
@@ -28,36 +39,28 @@ public class RecordActivity extends AppCompatActivity {
     }
 
     public void switchFragment(int idx) {
-        SuperFragment view = null;
-
-        if(idx == 1) {
-            view = new RecordVoiceFragment();
+        SuperFragment view;
+        if(idx == 0) {
+            // 0 은 녹음 화면으로 이동하게 합니다.
+            view = new AudioRecordRecFragment();
         } else {
-            view = new RecordPlayFragment();
+            // 1 은 녹음된 파일을 재생합니다.
+            view = new AudioRecordPlayFragment();
         }
 
         FragmentManager fm = getSupportFragmentManager();
         FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.record_container, view);
-        ft.commit();
+        ft.replace(R.id.recorder_container, view);
+        ft.commitAllowingStateLoss();
 
         this.nowView = view;
-    }
-
-    public void setActionBarTitle(@Nullable  String title) {
-        ActionBar bar = getSupportActionBar();
-
-        if(title == null) {
-            bar.hide();
-        } else {
-            bar.show();
-            bar.setTitle(title);
-        }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if(permissions.length == 0 || grantResults.length == 0) return;
+
         nowView.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 }

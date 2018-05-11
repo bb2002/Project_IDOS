@@ -1,4 +1,10 @@
-package kr.saintdev.idos.models.datas;
+package kr.saintdev.idos.models.database;
+
+/**
+ * Copyright (c) 2015-2018 Saint software All rights reserved.
+ *
+ * @date 2018-05-11
+ */
 
 import android.content.Context;
 import android.database.Cursor;

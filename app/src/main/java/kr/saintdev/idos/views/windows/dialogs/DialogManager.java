@@ -1,11 +1,11 @@
-package kr.saintdev.idos.views.dialogs.main;
+package kr.saintdev.idos.views.windows.dialogs;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.support.v7.app.AlertDialog;
 
-import kr.saintdev.idos.views.dialogs.main.clicklistener.OnNoClickListener;
-import kr.saintdev.idos.views.dialogs.main.clicklistener.OnYesClickListener;
+import kr.saintdev.idos.views.windows.dialogs.clicklistener.OnNoClickListener;
+import kr.saintdev.idos.views.windows.dialogs.clicklistener.OnYesClickListener;
 
 
 /**

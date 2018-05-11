@@ -12,25 +12,17 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".views.activitys.MainActivity"
+            android:label="@string/app_name"
             android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".views.activitys.RecordActivity"
+        <activity android:name=".views.activitys.AudioRecordActivity"
             android:enabled="true"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".views.activitys.TranslateActivity"
-            android:enabled="true"
-            android:screenOrientation="portrait"/>
-
-        <activity android:name=".views.activitys.VoiceActivity"
-            android:enabled="true"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

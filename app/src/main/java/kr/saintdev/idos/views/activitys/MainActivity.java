@@ -1,41 +1,69 @@
 package kr.saintdev.idos.views.activitys;
 
-import android.support.annotation.Nullable;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
-import android.support.v7.app.ActionBar;
-import android.support.v7.app.AppCompatActivity;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.widget.ImageButton;
 
 import kr.saintdev.idos.R;
-import kr.saintdev.idos.views.fragments.SuperFragment;
+
+/**
+ * Copyright (c) 2015-2018 Saint software All rights reserved.
+ *
+ * @date 2018-05-11
+ */
 
 public class MainActivity extends AppCompatActivity {
-    SuperFragment nowView = null;
+    MainActivity me = null;
+
+    ImageButton[] appOptions = null;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        this.me = this;
+        this.appOptions = new ImageButton[] {
+                findViewById(R.id.main_option_rec),
+                findViewById(R.id.main_option_play),
+                findViewById(R.id.main_option_stt),
+                findViewById(R.id.main_option_tts),
+                findViewById(R.id.main_option_translate),
+                findViewById(R.id.main_option_settings)
+        };
+
+        OnButtonClickHandler handler = new OnButtonClickHandler();
+        for(ImageButton b : appOptions) {
+            b.setOnClickListener(handler);
+        }
     }
 
-    public void switchFragment(SuperFragment view) {
-        FragmentManager fm = getSupportFragmentManager();
-        FragmentTransaction ft = fm.beginTransaction();
-        ft.replace(R.id.main_container, view);
-        ft.commit();
-
-        this.nowView = view;
-    }
-
-    public void setActionBarTitle(@Nullable  String title) {
-        ActionBar bar = getSupportActionBar();
-
-        if(title == null) {
-            bar.hide();
-        } else {
-            bar.show();
-            bar.setTitle(title);
+    class OnButtonClickHandler implements View.OnClickListener {
+        @Override
+        public void onClick(View v) {
+            switch(v.getId()) {
+                case R.id.main_option_rec:
+                    Intent record = new Intent(me, AudioRecordActivity.class);
+                    record.putExtra("index", 0);
+                    startActivity(record);
+                    break;
+                case R.id.main_option_play:
+                    Intent recordPlay = new Intent(me, AudioRecordActivity.class);
+                    recordPlay.putExtra("index", 1);
+                    startActivity(recordPlay);
+                    break;
+                case R.id.main_option_stt:
+                    break;
+                case R.id.main_option_tts:
+                    break;
+                case R.id.main_option_translate:
+                    break;
+                case R.id.main_option_settings:
+                    break;
+            }
         }
     }
 }

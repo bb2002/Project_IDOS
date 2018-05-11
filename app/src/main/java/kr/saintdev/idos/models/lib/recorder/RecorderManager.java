@@ -1,20 +1,22 @@
-package kr.saintdev.idos.models.components.recorder;
+package kr.saintdev.idos.models.lib.recorder;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.media.MediaRecorder;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 
 import java.io.File;
 import java.io.IOException;
 
 /**
- * Created by 5252b on 2018-05-11.
+ * Copyright (c) 2015-2018 Saint software All rights reserved.
+ *
+ * @date 2018-05-11
  */
 
 public class RecorderManager {
@@ -23,7 +25,7 @@ public class RecorderManager {
             Manifest.permission.RECORD_AUDIO,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
     };
-    public static final int PERMISSION_REQUEST = 0x0;       // 권한 요청 ID
+    public static final int PERMISSION_REQUEST = 0x100;       // 권한 요청 ID
 
     private MediaRecorder recorder = null;          // 녹음기
     private File saveFolder = null;                 // 저장 폴더
@@ -69,25 +71,27 @@ public class RecorderManager {
         ActivityCompat.requestPermissions(activity, NEED_PERMISSIONS, PERMISSION_REQUEST);
     }
 
-    long recordingStart = 0;
+    private long recordingStart = 0;
     public boolean startRecord() {
         if(!isRecording) {
             String fileName = System.currentTimeMillis() + ".3gp";
-            this.saveFolder = new File(context.getFilesDir(), fileName);
+            this.saveFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC), fileName);
 
             if (this.recorder == null) {
                 this.recorder = new MediaRecorder();
             }
 
+            Log.d("IDOS", this.saveFolder.getAbsolutePath());
+
             try {
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
                 recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD);
                 recorder.setOutputFile(this.saveFolder.getAbsolutePath());
                 recorder.prepare();
                 recorder.start();
-                recordingStart = System.currentTimeMillis();
 
+                recordingStart = System.currentTimeMillis();
                 this.isRecording = true;
                 return true;
             } catch (IOException iex) {
@@ -109,9 +113,11 @@ public class RecorderManager {
     }
 
     public void release() {
-        recorder.stop();
-        recorder.release();
-        recorder = null;
+        try {
+            recorder.stop();
+            recorder.release();
+            recorder = null;
+        } catch(Exception ex){}
     }
 
     public RecorderDB getRecorderDB() {

@@ -1,4 +1,4 @@
-package kr.saintdev.idos.views.dialogs.main.clicklistener;
+package kr.saintdev.idos.views.windows.dialogs.clicklistener;
 
 import android.content.DialogInterface;
 

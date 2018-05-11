@@ -1,4 +1,4 @@
-package kr.saintdev.idos.views.dialogs.main;
+package kr.saintdev.idos.views.windows.dialogs;
 
 import android.app.Dialog;
 import android.content.Context;
