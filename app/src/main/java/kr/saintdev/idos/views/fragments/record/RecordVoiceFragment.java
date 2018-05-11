@@ -11,9 +11,11 @@ import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -23,6 +25,9 @@ import java.io.IOException;
 import java.util.Calendar;
 
 import kr.saintdev.idos.R;
+import kr.saintdev.idos.models.components.recorder.RecordObject;
+import kr.saintdev.idos.models.components.recorder.RecorderDB;
+import kr.saintdev.idos.models.components.recorder.RecorderManager;
 import kr.saintdev.idos.views.activitys.RecordActivity;
 import kr.saintdev.idos.views.dialogs.main.DialogManager;
 import kr.saintdev.idos.views.dialogs.main.InputTextDialog;
@@ -39,9 +44,12 @@ public class RecordVoiceFragment extends SuperFragment {
 
     ImageButton switchButton = null;
     TextView statusView = null;
-    OnSwitchButtonClickHandler handler = null;
     DialogManager dm = null;
     InputTextDialog nameWriteDialog = null;
+
+    RecorderManager recoManager = null;
+    String recordFilePath = null;   // 녹음된 파일의 경로
+    int recordDuration = 0;         // 녹음된 파일의 길이
 
     @Nullable
     @Override
@@ -56,25 +64,13 @@ public class RecordVoiceFragment extends SuperFragment {
         Calendar nowDate = Calendar.getInstance();
         this.nameWriteDialog = new InputTextDialog(control,
                 nowDate.get(Calendar.YEAR) + "_" + (nowDate.get(Calendar.MONTH)+1) + "_" + nowDate.get(Calendar.DAY_OF_MONTH) +
-        nowDate.get(Calendar.HOUR_OF_DAY) + "_" +  nowDate.get(Calendar.MINUTE) + nowDate.get(Calendar.SECOND));
+                        nowDate.get(Calendar.HOUR_OF_DAY) + "_" +  nowDate.get(Calendar.MINUTE) + nowDate.get(Calendar.SECOND));
         this.nameWriteDialog.setCancelable(false);
         this.nameWriteDialog.setTitle("파일 이름");
 
-        this.handler = new OnSwitchButtonClickHandler();
-        this.switchButton.setOnClickListener(handler);
-        this.nameWriteDialog.setOnDismissListener(handler);
-
-        // 권한을 확인합니다.
-        String[] needPermissions = new String[]{
-                Manifest.permission.RECORD_AUDIO,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
-        };
-
-        if(ContextCompat.checkSelfPermission(control, needPermissions[0]) == PackageManager.PERMISSION_DENIED
-            || ContextCompat.checkSelfPermission(control, needPermissions[1]) == PackageManager.PERMISSION_DENIED) {
-            // 권한을 요청합니다.
-            ActivityCompat.requestPermissions(control, needPermissions, 0x0);
-        }
+        this.switchButton.setOnClickListener(new OnButtonClickHandler());
+        this.nameWriteDialog.setOnDismissListener(new OnDialogDismissHandler());
+        this.recoManager = new RecorderManager(control);
 
         return v;
     }
@@ -83,70 +79,53 @@ public class RecordVoiceFragment extends SuperFragment {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
 
-        if(requestCode != 0x0) return;
-
-        if(!(grantResults[0] == PackageManager.PERMISSION_GRANTED && grantResults[1] == PackageManager.PERMISSION_GRANTED)) {
-            // 권한이 거부됨.
-            dm.setTitle("권한 오류");
-            dm.setDescription("일부 권한이 제한되었습니다.\n녹음기를 사용 할 수 없습니다.");
-            dm.show();
+        if(requestCode == RecorderManager.PERMISSION_REQUEST) {
+            if(!recoManager.checkPermission()) {
+                dm.setTitle("권한 오류");
+                dm.setDescription("일부 권한이 제한되었습니다.\n녹음기를 사용 할 수 없습니다.");
+                dm.show();
+            }
         }
     }
 
-    class OnSwitchButtonClickHandler implements View.OnClickListener, Dialog.OnDismissListener {
-        boolean isRecording = false;
-        File recordFile = null;
-        MediaRecorder recorder = null;
-
+    class OnButtonClickHandler implements View.OnClickListener {
         @Override
-        public void onClick(View v) {
-            if(isRecording) {
-                stopRecord();   // 녹음을 중지합니다.
+        public void onClick(View view) {
+            Log.d("IDOS", "되라고 좀좀");
+
+            if(recoManager.isRecording()) {
+                // 녹음중이라면, 녹음을 중지합니다.
+                recoManager.stopRecord();
+
                 statusView.setText("녹음이 완료되었습니다.");
-
-                nameWriteDialog.show();
-                isRecording = false;
-            } else {
-                startRecord(); // 녹음을 시작합니다.
-                statusView.setText("녹음중 입니다.");
-                isRecording = true;
-
                 switchButton.setImageResource(R.drawable.ic_ok);
+                switchButton.setEnabled(false);
+
+                // 이름 입력창을 띄웁니다.
+                nameWriteDialog.show();
+            } else {
+                if(recoManager.startRecord()) {
+                    statusView.setText("녹음 중 입니다.");
+                } else {
+                    statusView.setText("녹음기를 실행 할 수 없습니다.");
+                }
             }
         }
+    }
 
+    class OnDialogDismissHandler implements Dialog.OnDismissListener {
         @Override
-        public void onDismiss(DialogInterface dialog) {
+        public void onDismiss(DialogInterface dialogInterface) {
             String name = nameWriteDialog.getData();
 
-            Toast.makeText(getContext(), recordFile.getAbsolutePath()+"/"+name, Toast.LENGTH_SHORT).show();
-        }
+            RecordObject recoObj = new RecordObject(name, new File(recordFilePath), recordDuration);
+            RecorderDB recoDB = recoManager.getRecorderDB();
+            recoDB.addRecordObject(recoObj);
 
-        private void startRecord() {
-            this.recorder = new MediaRecorder();
-            this.recordFile = Environment.getExternalStorageDirectory();
-            String path = recordFile.getAbsolutePath() + "/" + System.currentTimeMillis() + ".3gp";
+            recoManager.release();
+            Toast.makeText(getContext(), name + " 으로 저장되었습니다.", Toast.LENGTH_SHORT).show();
 
-            try {
-                recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AMR_NB);
-                recorder.setOutputFile(path);
-                recorder.prepare();
-                recorder.start();
-            } catch(IOException iex) {
-                dm.setTitle("Fatal error");
-                dm.setDescription("An error occurred\n" + iex.getMessage());
-                dm.show();
-
-                iex.printStackTrace();
-            }
-        }
-
-        private void stopRecord() {
-            recorder.stop();
-            recorder.release();
-            recorder = null;
+            control.finish();
         }
     }
 }
