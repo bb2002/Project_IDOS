@@ -56,8 +56,14 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(recordPlay);
                     break;
                 case R.id.main_option_stt:
+                    Intent sttConvert = new Intent(me, ConvertActivity.class);
+                    sttConvert.putExtra("index", 0);
+                    startActivity(sttConvert);
                     break;
                 case R.id.main_option_tts:
+                    Intent ttsConvert = new Intent(me, ConvertActivity.class);
+                    ttsConvert.putExtra("index", 1);
+                    startActivity(ttsConvert);
                     break;
                 case R.id.main_option_translate:
                     break;
