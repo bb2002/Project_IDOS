@@ -9,6 +9,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Calendar;
+
 import kr.saintdev.idos.R;
 
 /**
@@ -25,7 +27,14 @@ public class InputTextDialog extends Dialog {
 
     public InputTextDialog(@NonNull Context context, String defaultVal) {
         super(context);
-        this.defaultVal = defaultVal;
+
+        if(defaultVal == null) {
+            Calendar nowDate = Calendar.getInstance();
+            this.defaultVal = nowDate.get(Calendar.YEAR) + "_" + (nowDate.get(Calendar.MONTH)+1) + "_" + nowDate.get(Calendar.DAY_OF_MONTH) +
+                    nowDate.get(Calendar.HOUR_OF_DAY) + "_" +  nowDate.get(Calendar.MINUTE) + nowDate.get(Calendar.SECOND);
+        } else {
+            this.defaultVal = defaultVal;
+        }
     }
 
     @Override

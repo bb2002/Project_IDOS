@@ -50,10 +50,7 @@ public class AudioRecordRecFragment extends SuperFragment {
         this.recorderPower = v.findViewById(R.id.recorder_rec_switcher);
         this.statusView = v.findViewById(R.id.recorder_res_status);
         this.dm = new DialogManager(control);
-        Calendar nowDate = Calendar.getInstance();
-        this.textDialog = new InputTextDialog(control,
-                nowDate.get(Calendar.YEAR) + "_" + (nowDate.get(Calendar.MONTH)+1) + "_" + nowDate.get(Calendar.DAY_OF_MONTH) +
-                        nowDate.get(Calendar.HOUR_OF_DAY) + "_" +  nowDate.get(Calendar.MINUTE) + nowDate.get(Calendar.SECOND));
+        this.textDialog = new InputTextDialog(control, null);
         this.recorderPower.setOnClickListener(new OnButtonClickHandler());
         this.recManager = new RecorderManager(control);
 

@@ -28,6 +28,9 @@ public class DBHelper extends SQLiteOpenHelper {
     public void onCreate(SQLiteDatabase db) {
         // 녹음 데이터를 저장하는 테이블을 만든다.
         db.execSQL(SQLQuerys.RECORDER_TABLE);
+
+        // 변환된 텍스트를 저장하는 테이블을 만든다.
+        db.execSQL(SQLQuerys.CONVERTED_TABLE);
     }
 
     @Override
@@ -67,6 +70,12 @@ public class DBHelper extends SQLiteOpenHelper {
                 "record_name TEXT NOT NULL," +
                 "record_path TEXT NOT NULL," +
                 "record_length INTEGER NOT NULL," +
+                "created DATETIME DEFAULT (datetime('now', 'localhost'))" +
+                ")";
+        String CONVERTED_TABLE = "CREATE TABLE idos_convert_db (" +
+                "_id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                "convert_title TEXT NOT NULL," +
+                "convert_text TEXT NOT NULL," +
                 "created DATETIME DEFAULT (datetime('now', 'localhost'))" +
                 ")";
 
