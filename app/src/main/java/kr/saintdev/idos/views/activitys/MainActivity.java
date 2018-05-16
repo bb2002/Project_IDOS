@@ -66,6 +66,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(ttsConvert);
                     break;
                 case R.id.main_option_translate:
+                    Intent transalte = new Intent(me, TranslateActivity.class);
+                    startActivity(transalte);
                     break;
                 case R.id.main_option_settings:
                     break;

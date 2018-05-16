@@ -29,6 +29,10 @@
         <activity android:name=".views.activitys.ConvertActivity"
             android:enabled="true"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".views.activitys.TranslateActivity"
+            android:enabled="true"
+            android:screenOrientation="portrait" />
     </application>
 
 </manifest>

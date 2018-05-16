@@ -56,6 +56,8 @@ public class Translater extends BackgroundWork<TranslateObject> {
         BufferedReader br = null;
         if(responseCode != 200) { // 요청 실패
             return null;
+        } else {
+            br = new BufferedReader(new InputStreamReader(con.getInputStream()));
         }
 
         String inputLine;
@@ -66,9 +68,7 @@ public class Translater extends BackgroundWork<TranslateObject> {
         br.close();
 
         String translatedText = response.toString();
-        Log.d("IDOS", "번역됨 : " + translatedText);
-
-        TranslateObject tranObj = new TranslateObject(this.text, translatedText, this.output);
+        TranslateObject tranObj = new TranslateObject(translatedText);
         return tranObj;
     }
 }
