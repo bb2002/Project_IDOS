@@ -11,4 +11,5 @@ public interface APIConstant {
     String NCLOUD_SECRET = "n5xLiXuC4EuB7vZEnZSHS0AKBFtiTMLg4sKS50nl";
 
     String TTS_API = "https://naveropenapi.apigw.ntruss.com/voice/v1/tts";
+    String TRANSLATE_API =  "https://naveropenapi.apigw.ntruss.com/nmt/v1/translation";
 }

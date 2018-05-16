@@ -44,7 +44,7 @@ public class TTS extends BackgroundWork<TTSObject> {
     @Override
     protected TTSObject script() throws Exception {
         String text = URLEncoder.encode(this.sentence, "UTF-8"); // 13자
-        String apiURL = "https://naveropenapi.apigw.ntruss.com/voice/v1/tts";
+        String apiURL = APIConstant.TTS_API;
 
         URL url = new URL(apiURL);
         HttpURLConnection con = (HttpURLConnection)url.openConnection();
