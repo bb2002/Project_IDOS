@@ -77,6 +77,11 @@ public class TranItemSelectFragment extends SuperFragment {
         tranList.setAdapter(adapter);
     }
 
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        control.finish();
+    }
 
     class OnItemClickHandler implements AdapterView.OnItemClickListener {
         @Override

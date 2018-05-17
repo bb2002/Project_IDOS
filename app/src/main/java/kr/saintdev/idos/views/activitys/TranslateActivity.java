@@ -18,6 +18,8 @@ import kr.saintdev.idos.views.fragments.translate.TranItemSelectFragment;
  */
 
 public class TranslateActivity extends AppCompatActivity {
+    SuperFragment nowView = null;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -43,5 +45,12 @@ public class TranslateActivity extends AppCompatActivity {
         FragmentTransaction ft = fm.beginTransaction();
         ft.replace(R.id.translate_container, view);
         ft.commitAllowingStateLoss();
+
+        this.nowView = view;
+    }
+
+    @Override
+    public void onBackPressed() {
+        this.nowView.onBackPressed();
     }
 }

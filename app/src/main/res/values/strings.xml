@@ -1,3 +1,19 @@
 <resources>
     <string name="app_name">ProjectIDOS</string>
+    
+    <string-array name="translate_language_view">
+        <item>한국어</item>
+        <item>영어</item>
+        <item>일본어</item>
+        <item>중국어</item>
+        <item>프랑스어</item>
+    </string-array>
+
+    <string-array name="translate_language_code">
+        <item>ko</item>
+        <item>en</item>
+        <item>ja</item>
+        <item>zh-CN</item>
+        <item>fr</item>
+    </string-array>
 </resources>
