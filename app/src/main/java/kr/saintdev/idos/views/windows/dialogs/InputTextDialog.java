@@ -24,8 +24,13 @@ public class InputTextDialog extends Dialog {
 
     TextView editor = null;
     Button okButton = null;
+    boolean canEmpty = false;
 
     public InputTextDialog(@NonNull Context context, String defaultVal) {
+        this(context, defaultVal, false);
+    }
+
+    public InputTextDialog(@NonNull Context context, String defaultVal, boolean canEmpty) {
         super(context);
 
         if(defaultVal == null) {
@@ -35,6 +40,8 @@ public class InputTextDialog extends Dialog {
         } else {
             this.defaultVal = defaultVal;
         }
+
+        this.canEmpty = canEmpty;
     }
 
     @Override
@@ -52,9 +59,13 @@ public class InputTextDialog extends Dialog {
         this.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(editor.getText().length() == 0) {
-                    Toast.makeText(getContext(), "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                } else {
+                if(!canEmpty) {
+                    if (editor.getText().length() == 0) {
+                        Toast.makeText(getContext(), "값을 입력하세요.", Toast.LENGTH_SHORT).show();
+                    } else {
+                        dismiss();
+                    }
+                }  else {
                     dismiss();
                 }
             }

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:layout_margin="24dp">
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="볼륨 조절"
+        android:textSize="18sp"
+        android:textColor="#3E3E3E" />
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="이 볼륨을 조절하면 장치 미디어 볼륨이 조절됩니다.
+앱 전용 볼륨조절을 존재하지 않습니다."
+        android:layout_marginTop="8dp"/>
+
+    <SeekBar
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/settings_volume"
+        android:layout_marginTop="16dp"/>
+</LinearLayout>

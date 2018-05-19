@@ -1,13 +1,21 @@
 package kr.saintdev.idos.views.activitys;
 
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
+import android.view.ContextMenu;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import kr.saintdev.idos.R;
+import kr.saintdev.idos.views.windows.dialogs.InputTextDialog;
 
 /**
  * Copyright (c) 2015-2018 Saint software All rights reserved.
@@ -41,6 +49,49 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        super.onCreateOptionsMenu(menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch(item.getItemId()) {
+            case R.id.menu_search:
+                openSearchDialog();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    InputTextDialog searchDialog = null;
+    private void openSearchDialog() {
+        if(this.searchDialog == null) {
+            this.searchDialog = new InputTextDialog(this, "", true);
+            this.searchDialog.setOnDismissListener(new OnSearchDialogCloseHandler());
+            this.searchDialog.setTitle("검색");
+        }
+
+        this.searchDialog.show();
+    }
+
+    class OnSearchDialogCloseHandler implements Dialog.OnDismissListener {
+        @Override
+        public void onDismiss(DialogInterface dialogInterface) {
+            String search = searchDialog.getData();
+
+            if(search.length() != 0) {
+                Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
+                searchActivity.putExtra("q", search);
+                startActivity(searchActivity);
+            }
+        }
+    }
+
     class OnButtonClickHandler implements View.OnClickListener {
         @Override
         public void onClick(View v) {
@@ -70,6 +121,8 @@ public class MainActivity extends AppCompatActivity {
                     startActivity(transalte);
                     break;
                 case R.id.main_option_settings:
+                    Intent setting = new Intent(me, SettingsActivity.class);
+                    startActivity(setting);
                     break;
             }
         }

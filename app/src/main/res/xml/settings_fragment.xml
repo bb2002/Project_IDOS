@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+    <PreferenceCategory
+        android:title="음량 설정">
+        <Preference
+            android:title="볼륨 설정"
+            android:summary="볼륨을 설정합니다."
+            android:key="set_volume"/>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="고객 도움말">
+        <Preference
+            android:title="오류 신고">
+
+        </Preference>
+        <Preference
+            android:title="공지사항">
+
+        </Preference>
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="정보">
+        <Preference
+            android:title="버전 정보"
+            android:summary="Proejct, IDOS! v0.0.1"/>
+    </PreferenceCategory>
+</PreferenceScreen>

@@ -33,6 +33,12 @@
         <activity android:name=".views.activitys.TranslateActivity"
             android:enabled="true"
             android:screenOrientation="portrait" />
+
+        <activity android:name=".views.activitys.SettingsActivity"
+            android:enabled="true" />
+
+        <activity android:name=".views.activitys.SearchActivity"
+            android:enabled="true" />
     </application>
 
 </manifest>

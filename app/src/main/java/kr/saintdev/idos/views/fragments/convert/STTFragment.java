@@ -3,6 +3,7 @@ package kr.saintdev.idos.views.fragments.convert;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.speech.RecognitionListener;
 import android.speech.RecognizerIntent;
@@ -21,6 +22,7 @@ import java.util.ArrayList;
 import kr.saintdev.idos.R;
 import kr.saintdev.idos.models.lib.converter.ConvertedObject;
 import kr.saintdev.idos.models.lib.converter.ConverterDB;
+import kr.saintdev.idos.models.lib.recorder.RecorderManager;
 import kr.saintdev.idos.views.activitys.AudioRecordActivity;
 import kr.saintdev.idos.views.activitys.ConvertActivity;
 import kr.saintdev.idos.views.fragments.SuperFragment;
@@ -41,6 +43,7 @@ public class STTFragment extends SuperFragment {
 
     private ConvertActivity control = null;
     private ConverterDB dbManager = null;
+    private RecorderManager recManager = null;
 
     @Nullable
     @Override
@@ -60,7 +63,23 @@ public class STTFragment extends SuperFragment {
         this.startButton.setOnClickListener(handler);
         this.saveButton.setOnClickListener(handler);
 
+        recManager = new RecorderManager(control);
+        if(!recManager.checkPermission()) {
+            recManager.obtainPermission(control);
+        }
+
         return v;
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+
+        if(requestCode == RecorderManager.PERMISSION_REQUEST) {
+            if(!(grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                control.finish();
+            }
+        }
     }
 
     class OnButtonClickHandler implements View.OnClickListener {

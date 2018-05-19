@@ -15,13 +15,6 @@ import java.util.ArrayList;
 
 import kr.saintdev.idos.models.database.DBHelper;
 
-
-/**
- * Copyright (c) 2015-2018 Saint software All rights reserved.
- *
- * @date 2018-05-11
- */
-
 public class RecorderDB {
     private Context context = null;
     private DBHelper dbHelper = null;
