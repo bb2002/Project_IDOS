@@ -22,4 +22,16 @@
         android:textSize="14sp"
         android:text="확인"
         android:textColor="@color/colorWhite"/>
+
+    <Button
+        android:id="@+id/dialog_input_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:layout_below="@+id/dialog_input_editor"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@+id/dialog_input_ok"
+        android:background="@null"
+        android:text="취소"
+        android:textColor="#df2b2b"
+        android:textSize="14sp" />
 </RelativeLayout>

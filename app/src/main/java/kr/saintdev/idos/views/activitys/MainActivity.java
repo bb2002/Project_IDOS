@@ -71,7 +71,7 @@ public class MainActivity extends AppCompatActivity {
     InputTextDialog searchDialog = null;
     private void openSearchDialog() {
         if(this.searchDialog == null) {
-            this.searchDialog = new InputTextDialog(this, "", true);
+            this.searchDialog = new InputTextDialog(this, "");
             this.searchDialog.setOnDismissListener(new OnSearchDialogCloseHandler());
             this.searchDialog.setTitle("검색");
         }
@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         public void onDismiss(DialogInterface dialogInterface) {
             String search = searchDialog.getData();
 
-            if(search.length() != 0) {
+            if(search != null && search.length() != 0) {
                 Intent searchActivity = new Intent(getApplicationContext(), SearchActivity.class);
                 searchActivity.putExtra("q", search);
                 startActivity(searchActivity);

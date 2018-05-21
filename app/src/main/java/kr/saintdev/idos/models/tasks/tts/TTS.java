@@ -28,6 +28,7 @@ import kr.saintdev.idos.models.tasks.OnBackgroundWorkListener;
 public class TTS extends BackgroundWork<TTSObject> {
     String sentence = null;
     String fileName = null;
+    String vocaloid = "mijin";
 
     public TTS(String sentence, @Nullable String fileName, int requestCode, OnBackgroundWorkListener listener) {
         super(requestCode, listener);
@@ -39,6 +40,15 @@ public class TTS extends BackgroundWork<TTSObject> {
             this.fileName = fileName + System.currentTimeMillis();
         }
         this.fileName += ".mp3";
+    }
+
+    public void setVocal(int idx) {
+        switch(idx) {
+            case 0:
+                vocaloid = "jinho"; break;
+            case 1:
+                vocaloid = "mijin"; break;
+        }
     }
 
     @Override
@@ -53,7 +63,7 @@ public class TTS extends BackgroundWork<TTSObject> {
         con.setRequestProperty("X-NCP-APIGW-API-KEY", APIConstant.NCLOUD_SECRET);
 
         // post request
-        String postParams = "speaker=mijin&speed=0&text=" + text;
+        String postParams = "speaker="+vocaloid+"&speed=0&text=" + text;
         con.setDoOutput(true);
 
         DataOutputStream wr = new DataOutputStream(con.getOutputStream());

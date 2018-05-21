@@ -118,12 +118,15 @@ public class STTFragment extends SuperFragment {
         @Override
         public void onDismiss(DialogInterface dialogInterface) {
             String title = textDialog.getData();
-
-            ConvertedObject obj = new ConvertedObject(0, title, resultText, null);
-            dbManager.addConvertedText(obj);
+            if(title != null) {
+                ConvertedObject obj = new ConvertedObject(0, title, resultText, null);
+                dbManager.addConvertedText(obj);
+                Toast.makeText(control, "저장 되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(control, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+            }
 
             control.finish();
-            Toast.makeText(control, "저장되었습니다.", Toast.LENGTH_SHORT).show();
         }
     }
 

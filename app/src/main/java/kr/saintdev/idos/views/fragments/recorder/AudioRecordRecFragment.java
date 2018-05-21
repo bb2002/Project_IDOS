@@ -14,6 +14,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.io.File;
 import java.util.Calendar;
 
 import kr.saintdev.idos.R;
@@ -96,13 +97,24 @@ public class AudioRecordRecFragment extends SuperFragment {
         public void onDismiss(DialogInterface dialogInterface) {
             dialogInterface.dismiss();
             String name = textDialog.getData();
+            if(name != null) {
+                RecordObject recObj = new RecordObject(name, recManager.getSaveFolder().getAbsoluteFile(), length);
+                RecorderDB db = recManager.getRecorderDB();
+                db.addRecordObject(recObj);
 
-            RecordObject recObj = new RecordObject(name, recManager.getSaveFolder().getAbsoluteFile(), length);
-            RecorderDB db = recManager.getRecorderDB();
-            db.addRecordObject(recObj);
+                recManager.release();
+                Toast.makeText(control, "저장되었습니다.", Toast.LENGTH_SHORT).show();
+            } else {
+                // 저장이 취소되었다.
+                File file = recManager.getSaveFolder().getAbsoluteFile();
+                if(file.delete()) {
+                    // 삭제까지 완료.
+                    Toast.makeText(control, "취소 되었습니다.", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(control, "임시 파일이 남았습니다.\n취소되었습니다.", Toast.LENGTH_SHORT).show();
+                }
+            }
 
-            recManager.release();
-            Toast.makeText(control, "저장되었습니다.", Toast.LENGTH_SHORT).show();
             control.finish();
         }
     }

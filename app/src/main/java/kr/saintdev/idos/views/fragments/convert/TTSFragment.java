@@ -1,5 +1,7 @@
 package kr.saintdev.idos.views.fragments.convert;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.media.AudioManager;
 import android.media.MediaPlayer;
@@ -8,12 +10,14 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.PopupMenu;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -29,6 +33,7 @@ import kr.saintdev.idos.views.activitys.ConvertActivity;
 import kr.saintdev.idos.views.activitys.MainActivity;
 import kr.saintdev.idos.views.fragments.SuperFragment;
 import kr.saintdev.idos.views.windows.dialogs.DialogManager;
+import kr.saintdev.idos.views.windows.dialogs.InputTextDialog;
 import kr.saintdev.idos.views.windows.dialogs.clicklistener.OnYesClickListener;
 import kr.saintdev.idos.views.windows.progress.ProgressManager;
 
@@ -57,6 +62,8 @@ public class TTSFragment extends SuperFragment {
 
         this.ttsList = v.findViewById(R.id.convert_tts_list);
         this.ttsList.setOnItemClickListener(new OnItemClickHandler());
+        this.ttsList.setOnItemLongClickListener(new OnItemLongClickHandler());
+
         this.dbManager = new ConverterDB(control);
         this.pm = new ProgressManager(control);
         this.dm = new DialogManager(control);
@@ -77,7 +84,10 @@ public class TTSFragment extends SuperFragment {
     @Override
     public void onResume() {
         super.onResume();
+        reload();
+    }
 
+    private void reload() {
         this.convertedObjects = dbManager.getConvertedText();
 
         ArrayAdapter adapter = new ArrayAdapter(control, android.R.layout.simple_list_item_1);
@@ -87,6 +97,8 @@ public class TTSFragment extends SuperFragment {
 
         ttsList.setAdapter(adapter);
     }
+
+
 
     @Override
     public void onStop() {
@@ -102,12 +114,82 @@ public class TTSFragment extends SuperFragment {
 
     class OnItemClickHandler implements AdapterView.OnItemClickListener {
         @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            ConvertedObject convObj = convertedObjects.get(i);
-            pm.enable();
+        public void onItemClick(AdapterView<?> adapterView, View view, final int i, long l) {
+            String[] items = new String[]{ "남자", "여자" };
 
-            TTS tts = new TTS(convObj.getData(), convObj.getTitle(), 0x0, new OnBackgroundWorkHandler());
-            tts.execute();
+            AlertDialog.Builder builder = new AlertDialog.Builder(control);
+            builder.setTitle("보컬로이드 선택");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    ConvertedObject convObj = convertedObjects.get(i);
+                    pm.enable();
+
+                    TTS tts = new TTS(convObj.getData(), convObj.getTitle(), 0x0, new OnBackgroundWorkHandler());
+                    tts.setVocal(which);
+                    tts.execute();
+                }
+            });
+
+            builder.show();
+        }
+    }
+
+    class OnItemLongClickHandler implements AdapterView.OnItemLongClickListener, Dialog.OnDismissListener {
+        private int targetItem = 0;
+        private InputTextDialog dialog = null;
+
+        @Override
+        public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, long id) {
+            String[] items = {"수정", "삭제", "작업 없음"};
+
+            this.targetItem = position;
+
+            AlertDialog.Builder builder = new AlertDialog.Builder(control);
+            builder.setTitle("메뉴 선택");
+            builder.setItems(items, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    switch (which) {
+                        case 0:     // 수정 버튼 클릭 시
+                            ConvertedObject convObj = convertedObjects.get(position);
+                            update(convObj.getTitle());
+                            break;
+                        case 1:     // 삭제 버튼 클릭 시
+                            remove(position);
+                            break;
+                        case 2:     // 취소 버튼 클릭 시
+                            break;
+                    }
+                }
+            });
+
+            builder.show();
+            return true;
+        }
+
+        private void update(String defaultVal) {
+            this.dialog = new InputTextDialog(control, defaultVal);
+            this.dialog.show();
+            this.dialog.setOnDismissListener(this);
+        }
+
+        private void remove(int pos) {
+            ConvertedObject convObj = convertedObjects.get(pos);
+            dbManager.removeItem(convObj.getId());
+            reload();
+        }
+
+        @Override
+        public void onDismiss(DialogInterface a) {
+            // 데이터를 업데이트 한다.
+            ConvertedObject convObj = convertedObjects.get(targetItem);
+
+            String title = dialog.getData();
+            if(title != null) {
+                dbManager.updateTitle(convObj.getId(), title);
+                reload();
+            }
         }
     }
 

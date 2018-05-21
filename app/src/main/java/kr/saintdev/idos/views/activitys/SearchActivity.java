@@ -90,6 +90,7 @@ public class SearchActivity extends AppCompatActivity {
 
         for(RecordObject rec : searchResultRecord) this.recordListAdapter.add(rec.getRecordName());
         for(ConvertedObject cv : searchResultSTT) this.sttListAdapter.add(cv.getTitle());
+
         this.recordListAdapter.notifyDataSetChanged();
         this.sttListAdapter.notifyDataSetChanged();
     }

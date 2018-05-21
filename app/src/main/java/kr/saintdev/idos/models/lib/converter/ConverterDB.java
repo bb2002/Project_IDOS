@@ -50,4 +50,17 @@ public class ConverterDB {
 
         return arrayObj;
     }
+
+    public void updateTitle(int id, String title) {
+        SQLiteStatement pst =
+                dbHelper.getWriteDB().compileStatement("UPDATE idos_convert_db SET convert_title = ? WHERE _id = ?");
+        pst.bindString(1, title);
+        pst.bindLong(2, id);
+        pst.execute();
+    }
+
+    public void removeItem(int id) {
+        String sql = "DELETE FROM idos_convert_db WHERE _id = " + id;
+        dbHelper.sendWriteableQuery(sql);
+    }
 }

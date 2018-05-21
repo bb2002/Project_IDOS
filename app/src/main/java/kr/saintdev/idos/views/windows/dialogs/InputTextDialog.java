@@ -24,13 +24,11 @@ public class InputTextDialog extends Dialog {
 
     TextView editor = null;
     Button okButton = null;
-    boolean canEmpty = false;
+    Button onCancel = null;
+
+    String data = null;
 
     public InputTextDialog(@NonNull Context context, String defaultVal) {
-        this(context, defaultVal, false);
-    }
-
-    public InputTextDialog(@NonNull Context context, String defaultVal, boolean canEmpty) {
         super(context);
 
         if(defaultVal == null) {
@@ -40,10 +38,7 @@ public class InputTextDialog extends Dialog {
         } else {
             this.defaultVal = defaultVal;
         }
-
-        this.canEmpty = canEmpty;
     }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,6 +46,7 @@ public class InputTextDialog extends Dialog {
 
         this.editor = findViewById(R.id.dialog_input_editor);
         this.okButton = findViewById(R.id.dialog_input_ok);
+        this.onCancel = findViewById(R.id.dialog_input_cancel);
 
         if(this.defaultVal != null) {
             this.editor.setText(this.defaultVal);
@@ -59,20 +55,28 @@ public class InputTextDialog extends Dialog {
         this.okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(!canEmpty) {
-                    if (editor.getText().length() == 0) {
-                        Toast.makeText(getContext(), "값을 입력하세요.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        dismiss();
-                    }
-                }  else {
-                    dismiss();
+                String text = editor.getText().toString();
+
+                if(text.length() == 0) {
+                    data = null;
+                } else {
+                    data = text;
                 }
+
+                dismiss();
+            }
+        });
+
+        this.onCancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                data = null;
+                dismiss();
             }
         });
     }
 
     public String getData() {
-        return this.editor.getText().toString();
+        return this.data;
     }
 }

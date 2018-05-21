@@ -74,19 +74,17 @@ public class RecorderManager {
     private long recordingStart = 0;
     public boolean startRecord() {
         if(!isRecording) {
-            String fileName = System.currentTimeMillis() + ".3gp";
+            String fileName = System.currentTimeMillis() + ".aac";
             this.saveFolder = new File(Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_MUSIC), fileName);
 
             if (this.recorder == null) {
                 this.recorder = new MediaRecorder();
             }
 
-            Log.d("IDOS", this.saveFolder.getAbsolutePath());
-
             try {
                 recorder.setAudioSource(MediaRecorder.AudioSource.MIC);
-                recorder.setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP);
-                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC_ELD);
+                recorder.setOutputFormat(MediaRecorder.OutputFormat.AAC_ADTS);
+                recorder.setAudioEncoder(MediaRecorder.AudioEncoder.AAC);
                 recorder.setOutputFile(this.saveFolder.getAbsolutePath());
                 recorder.prepare();
                 recorder.start();

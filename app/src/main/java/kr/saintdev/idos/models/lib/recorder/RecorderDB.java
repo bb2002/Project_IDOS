@@ -51,4 +51,20 @@ public class RecorderDB {
 
         return arrayObj;
     }
+
+    public void updateRecordObj(RecordObject recObj, String newTitle) {
+        SQLiteStatement pst =
+                dbHelper.getWriteDB().compileStatement("UPDATE idos_record_db SET record_name = ? WHERE record_path = ?");
+        pst.bindString(1, newTitle);
+        pst.bindString(2, recObj.getFilePath().getPath());
+        pst.execute();
+    }
+
+    public void removeRecordObj(RecordObject recObj) {
+        String sql = "DELETE FROM idos_record_db WHERE record_path = '"+recObj.getFilePath().getPath()+"'";
+        dbHelper.sendWriteableQuery(sql);
+
+        File file = recObj.getFilePath();
+        file.delete();
+    }
 }
