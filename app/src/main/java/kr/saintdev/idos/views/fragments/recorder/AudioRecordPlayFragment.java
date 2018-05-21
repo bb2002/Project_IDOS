@@ -1,25 +1,17 @@
 package kr.saintdev.idos.views.fragments.recorder;
 
+
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.ComponentName;
 import android.content.DialogInterface;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.webkit.MimeTypeMap;
-import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.jean.jcplayer.JcAudio;
@@ -30,14 +22,12 @@ import java.io.File;
 import java.util.ArrayList;
 
 import kr.saintdev.idos.R;
-import kr.saintdev.idos.models.lib.converter.ConvertedObject;
 import kr.saintdev.idos.models.lib.recorder.RecordObject;
 import kr.saintdev.idos.models.lib.recorder.RecorderDB;
 import kr.saintdev.idos.views.activitys.AudioRecordActivity;
 import kr.saintdev.idos.views.adapters.AudioRecordAdapter;
 import kr.saintdev.idos.views.fragments.SuperFragment;
 import kr.saintdev.idos.views.windows.dialogs.InputTextDialog;
-import nl.changer.audiowife.AudioWife;
 
 /**
  * Copyright (c) 2015-2018 Saint software All rights reserved.

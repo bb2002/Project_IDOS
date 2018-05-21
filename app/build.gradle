@@ -26,6 +26,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
-    implementation 'net.the4thdimension:audio-wife:1.0.3'
-    compile 'com.github.jeancsanchez:JcPlayer:2.6.10'
+    implementation 'com.github.jeancsanchez:JcPlayer:2.6.10'
 }

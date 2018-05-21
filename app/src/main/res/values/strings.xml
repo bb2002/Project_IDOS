@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">ProjectIDOS</string>
+    <string name="app_name">IDOS</string>
     
     <string-array name="translate_language_view">
         <item>한국어</item>
