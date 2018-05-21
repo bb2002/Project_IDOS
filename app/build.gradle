@@ -1,7 +1,7 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 26
+    compileSdkVersion 27
     defaultConfig {
         applicationId "kr.saintdev.idos"
         minSdkVersion 19
@@ -27,4 +27,5 @@ dependencies {
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
 
     implementation 'net.the4thdimension:audio-wife:1.0.3'
+    compile 'com.github.jeancsanchez:JcPlayer:2.6.10'
 }

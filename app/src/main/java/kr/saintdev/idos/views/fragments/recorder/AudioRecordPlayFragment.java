@@ -22,6 +22,10 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.example.jean.jcplayer.JcAudio;
+import com.example.jean.jcplayer.JcPlayerView;
+import com.example.jean.jcplayer.JcStatus;
+
 import java.io.File;
 import java.util.ArrayList;
 
@@ -47,9 +51,8 @@ public class AudioRecordPlayFragment extends SuperFragment {
     AudioRecordActivity control = null;
     RecorderDB recDB = null;
     AudioRecordAdapter adapter = null;
-    RelativeLayout playerLayout = null;
 
-    AudioWife audioPlayer = null;
+    JcPlayerView audioPlayer = null;
 
     @Nullable
     @Override
@@ -61,9 +64,9 @@ public class AudioRecordPlayFragment extends SuperFragment {
         this.recDB = new RecorderDB(control);
         this.recordFiles.setOnItemClickListener(new OnItemClickHandler());
         this.recordFiles.setOnItemLongClickListener(new OnItemLongClickHandler());
-        this.playerLayout = v.findViewById(R.id.recorder_player);
 
-        this.audioPlayer = AudioWife.getInstance();
+        // Audio player 를 가져옵니다.
+        this.audioPlayer = v.findViewById(R.id.recorder_player);
 
         return v;
     }
@@ -92,15 +95,41 @@ public class AudioRecordPlayFragment extends SuperFragment {
                 return;
             }
 
-            Uri uri = Uri.fromFile(recObj.getFilePath());
+            final JcAudio jcAudio = JcAudio.createFromFilePath(recObj.getRecordName(), recObj.getFilePath().getAbsolutePath());
+            audioPlayer.playAudio(jcAudio);
+            audioPlayer.registerStatusListener(new JcPlayerView.JcPlayerViewStatusListener() {
+                @Override
+                public void onPausedStatus(JcStatus jcStatus) {
 
-            try {
-                audioPlayer.init(control, uri);
-                audioPlayer.useDefaultUi(playerLayout, getLayoutInflater());
-            } catch(Exception ex) {
-                Toast.makeText(control, "오디오 플레이어를 찾을 수 없습니다.", Toast.LENGTH_SHORT).show();
-                ex.printStackTrace();
-            }
+                }
+
+                @Override
+                public void onContinueAudioStatus(JcStatus jcStatus) {
+
+                }
+
+                @Override
+                public void onPlayingStatus(JcStatus jcStatus) {
+
+                }
+
+                @Override
+                public void onTimeChangedStatus(JcStatus jcStatus) {
+
+                }
+
+                @Override
+                public void onCompletedAudioStatus(JcStatus jcStatus) {
+                    // 파일 재생이 완료되었다.
+                    audioPlayer.removeAudio(jcAudio);
+                    audioPlayer.kill();
+                }
+
+                @Override
+                public void onPreparedAudioStatus(JcStatus jcStatus) {
+
+                }
+            });
         }
     }
 
